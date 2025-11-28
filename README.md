@@ -78,13 +78,13 @@ EchoChat/
                         │
                         ▼
               ┌─────────────────┐
-              │  EchoChat Server │
-              │                  │
-              │  ❌ No plaintext │
-              │  ❌ No user data │
-              │  ✅ Only tokens  │
-              │  ✅ Encrypted    │
-              │     payloads     │
+              │  EchoChat Server│
+              │                 │
+              │  ❌ No plaintext│
+              │  ❌ No user data│
+              │  ✅ Only tokens │
+              │  ✅ Encrypted   │
+              │     payloads    │
               └─────────────────┘
 ```
 
