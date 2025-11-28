@@ -13,9 +13,21 @@
 
 A truly private messaging app with end-to-end encryption where even the server cannot read your messages.
 
+[<img src="https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android" alt="Download APK">](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases)
+[<img src="https://img.shields.io/badge/Download-TestFlight-blue?style=for-the-badge&logo=apple" alt="TestFlight">](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases)
+
 </div>
 
 > ⚠️ **Note:** This project uses a **Source Available License**. You can view, study, and contribute to the code, but redistribution and publishing derivative works is not permitted. See [LICENSE](LICENSE) for details.
+
+---
+
+## 📲 Download
+
+| Platform | Link |
+|----------|------|
+| **Android** | [Download APK](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases) |
+| **iOS** | [TestFlight](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases) |
 
 ---
 
@@ -78,13 +90,13 @@ EchoChat/
                         │
                         ▼
               ┌─────────────────┐
-              │  EchoChat Server │
-              │                  │
-              │  ❌ No plaintext │
-              │  ❌ No user data │
-              │  ✅ Only tokens  │
-              │  ✅ Encrypted    │
-              │     payloads     │
+              │  EchoChat Serve │
+              │                 │
+              │  ❌ No plaintext│
+              │  ❌ No user data│
+              │  ✅ Only tokens │
+              │  ✅ Encrypted   │
+              │     payloads    │
               └─────────────────┘
 ```
 
