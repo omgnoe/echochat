@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Erlaube Cleartext (HTTP/WS) Traffic für die Entwicklung -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Spezifische Regel für deinen Server -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">37.59.104.251</domain>
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,101 @@
+EchoChat Source Available License
+Version 1.0, 2025
+
+Copyright (c) 2025 TTA. All rights reserved.
+
+TERMS AND CONDITIONS
+
+1. DEFINITIONS
+
+   "Software" refers to EchoChat, including all source code, documentation,
+   and associated files in this repository.
+   
+   "You" refers to any individual or entity accessing or using the Software.
+   
+   "Contribution" means any code, documentation, or other material submitted
+   to this project.
+
+2. PERMITTED USES
+
+   You ARE permitted to:
+   
+   a) VIEW and STUDY the source code for educational purposes
+   
+   b) FORK this repository on GitHub for the purpose of contributing
+      improvements back to the original project
+   
+   c) MODIFY the code locally for personal, non-commercial use
+   
+   d) SUBMIT contributions (pull requests, issues, security reports)
+      to the original repository
+   
+   e) PERFORM security research and report vulnerabilities responsibly
+   
+   f) RUN the Software privately for personal use
+
+3. PROHIBITED USES
+
+   You are NOT permitted to:
+   
+   a) PUBLISH, DISTRIBUTE, or REDISTRIBUTE the Software or any derivative
+      works in any form (app stores, websites, package managers, etc.)
+   
+   b) CREATE and DISTRIBUTE derivative works, forks, or modified versions
+      as standalone products
+   
+   c) USE the Software or its code in commercial products or services
+   
+   d) REMOVE or ALTER this license, copyright notices, or attribution
+   
+   e) SUBLICENSE the Software to third parties
+   
+   f) CLAIM ownership of the Software or represent it as your own work
+
+4. CONTRIBUTIONS
+
+   By submitting a Contribution to this project, you:
+   
+   a) Grant TTA a perpetual, worldwide, non-exclusive, royalty-free license
+      to use, modify, and incorporate your Contribution into the Software
+   
+   b) Confirm that you have the right to submit the Contribution
+   
+   c) Understand that your Contribution may be used in future versions,
+      including potential commercial versions
+
+5. SECURITY RESEARCH
+
+   Security researchers are encouraged to:
+   
+   a) Review the code for vulnerabilities
+   
+   b) Report issues responsibly via GitHub Issues or private disclosure
+   
+   c) NOT exploit vulnerabilities against production systems or users
+
+6. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+7. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+   USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+8. TERMINATION
+
+   This license automatically terminates if you violate any of these terms.
+   Upon termination, you must destroy all copies of the Software in your
+   possession.
+
+9. GOVERNING LAW
+
+   This license shall be governed by the laws of Luxembourg.
+
+---
+
+For licensing inquiries or commercial use, please open a GitHub Issue.

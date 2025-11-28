@@ -1,0 +1,55 @@
+name: echochat_app
+description: EchoChat – anonymer, verschlüsselter Messenger mit Zero Knowledge Architektur.
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.8
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.1.1
+  
+  # Network
+  web_socket_channel: ^2.4.5
+  
+  # Storage & Security
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.3.2
+  
+  # Crypto
+  bip39: ^1.0.6
+  cryptography: ^2.7.0
+  crypto: ^3.0.3
+  
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+  permission_handler: ^11.3.1
+  url_launcher: ^6.2.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.2
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/icon/
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/echochat_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#0D1117"
+  adaptive_icon_foreground: "assets/icon/echochat_icon_adaptive.png"
+  remove_alpha_ios: true
