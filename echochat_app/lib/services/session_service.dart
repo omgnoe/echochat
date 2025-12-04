@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -44,6 +45,7 @@ class Session {
   final String sessionId;
   final String passcode;
   final String passcodeHash;
+  final String? passcodeHashLegacy; // Für Rückwärtskompatibilität
   final String name;
   final DateTime createdAt;
   final DateTime? expiresAt;
@@ -58,6 +60,7 @@ class Session {
     required this.sessionId,
     required this.passcode,
     String? passcodeHash,
+    String? passcodeHashLegacy,
     required this.name,
     required this.createdAt,
     this.expiresAt,
@@ -67,17 +70,43 @@ class Session {
     this.isActive = true,
     this.isCreator = false,
     this.ephemeralPublicKey,
-  }) : passcodeHash = passcodeHash ?? _simpleHash(passcode);
+  })  : passcodeHash = passcodeHash ?? _computeHash(passcode),
+        passcodeHashLegacy = passcodeHashLegacy ?? _computeHashLegacy(passcode);
 
-  /// Einfache Hash-Funktion (ohne crypto package)
-  static String _simpleHash(String input) {
+  /// NEUER Hash (v1.2.0+) - FNV-1a mit Salt
+  static String _computeHash(String input) {
     if (input.isEmpty) return '';
-    var hash = 0;
-    for (var i = 0; i < input.length; i++) {
-      hash = ((hash << 5) - hash) + input.codeUnitAt(i);
-      hash = hash & 0xFFFFFFFF;
+
+    final normalized = input.toUpperCase().trim();
+    final bytes = utf8.encode('echochat-salt-v2:$normalized');
+
+    var hash1 = 0x811c9dc5; // FNV offset basis
+    var hash2 = 0;
+
+    for (var i = 0; i < bytes.length; i++) {
+      hash1 ^= bytes[i];
+      hash1 = (hash1 * 0x01000193) & 0xFFFFFFFF; // FNV prime
+      hash2 = ((hash2 << 5) - hash2 + bytes[i]) & 0xFFFFFFFF;
     }
-    return hash.toRadixString(16).toUpperCase().padLeft(8, '0');
+
+    // Kombiniere beide Hashes für 16 Zeichen Output
+    final combined =
+        '${hash1.toRadixString(16).padLeft(8, '0')}${hash2.toRadixString(16).padLeft(8, '0')}';
+    return combined.toUpperCase();
+  }
+
+  /// ALTER Hash (v1.0.x - v1.1.x) - Simpler DJB2-ähnlicher Hash
+  /// Wird für Rückwärtskompatibilität mitgesendet
+  static String _computeHashLegacy(String input) {
+    if (input.isEmpty) return '';
+
+    final normalized = input.toUpperCase().trim();
+    var hash = 0;
+    for (var i = 0; i < normalized.length; i++) {
+      hash = ((hash << 5) - hash) + normalized.codeUnitAt(i);
+      hash = hash & 0xFFFFFFFF; // Convert to 32bit integer
+    }
+    return hash.abs().toString();
   }
 
   static const sessionDuration = Duration(days: 3);
@@ -105,6 +134,7 @@ class Session {
         'sessionId': sessionId,
         'passcode': passcode,
         'passcodeHash': passcodeHash,
+        'passcodeHashLegacy': passcodeHashLegacy,
         'name': name,
         'createdAt': createdAt.toIso8601String(),
         'expiresAt': expiresAt?.toIso8601String(),
@@ -120,6 +150,7 @@ class Session {
         sessionId: json['sessionId'] as String,
         passcode: json['passcode'] as String? ?? '',
         passcodeHash: json['passcodeHash'] as String?,
+        passcodeHashLegacy: json['passcodeHashLegacy'] as String?,
         name: json['name'] as String,
         createdAt: DateTime.parse(json['createdAt'] as String),
         expiresAt: json['expiresAt'] != null
@@ -141,7 +172,8 @@ class SessionService {
 
   final _secureStorage = SecureStorageService();
 
-  static const _sessionsKey = 'echochat_sessions_v2';
+  static const _sessionsKey =
+      'echochat_sessions_v3'; // Bumped version for new hash
   static const _messagesKeyPrefix = 'echochat_messages_v2_';
   static const _sessionIdChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   static const _passcodeChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -159,9 +191,9 @@ class SessionService {
         4, (_) => _passcodeChars[random.nextInt(_passcodeChars.length)]).join();
   }
 
-  /// Hasht einen Passcode
+  /// Hasht einen Passcode mit kryptografischem Hash
   static String hashPasscode(String passcode) {
-    return Session._simpleHash(passcode.toUpperCase());
+    return Session._computeHash(passcode);
   }
 
   static ({String sessionId, String? passcode, String? passcodeHash})
@@ -207,7 +239,15 @@ class SessionService {
 
   Future<List<Session>> loadSessions() async {
     try {
-      final dataList = await _secureStorage.loadEncryptedList(_sessionsKey);
+      // Try new format first
+      var dataList = await _secureStorage.loadEncryptedList(_sessionsKey);
+
+      // Migration: also check old key
+      if (dataList.isEmpty) {
+        dataList =
+            await _secureStorage.loadEncryptedList('echochat_sessions_v2');
+      }
+
       final sessions = dataList
           .map((e) => Session.fromJson(e))
           .where((s) => !s.isExpired)

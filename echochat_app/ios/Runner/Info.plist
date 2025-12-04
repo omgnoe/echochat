@@ -46,19 +46,19 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	
-	<!-- Kamera-Berechtigung für QR-Scanner -->
+	<!-- Camera permission for QR scanner -->
 	<key>NSCameraUsageDescription</key>
-	<string>EchoChat benötigt Kamerazugriff um QR-Codes von Freunden zu scannen und sie hinzuzufügen.</string>
+	<string>EchoChat needs camera access to scan QR codes from friends and add them.</string>
 	
-	<!-- Netzwerk/Bonjour für lokale Verbindungen (optional) -->
+	<!-- Network/Bonjour for local connections (optional) -->
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>EchoChat nutzt das lokale Netzwerk für sichere Verbindungen.</string>
+	<string>EchoChat uses the local network for secure connections.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_echochat._tcp</string>
 	</array>
 	
-	<!-- App Transport Security - für WebSocket Verbindungen -->
+	<!-- App Transport Security - for WebSocket connections -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -67,7 +67,7 @@
 		<true/>
 	</dict>
 	
-	<!-- Hintergrund-Modi (optional, für Push-Benachrichtigungen später) -->
+	<!-- Background modes (optional, for push notifications later) -->
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -80,11 +80,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	
-	<!-- Face ID Berechtigung (für sichere Speicherung später) -->
+	<!-- Face ID permission (for secure storage later) -->
 	<key>NSFaceIDUsageDescription</key>
-	<string>EchoChat kann Face ID nutzen um deine Identität zu schützen.</string>
+	<string>EchoChat can use Face ID to protect your identity.</string>
 	
-	<!-- Verhindert iTunes File Sharing -->
+	<!-- Prevents iTunes File Sharing -->
 	<key>UIFileSharingEnabled</key>
 	<false/>
 	
