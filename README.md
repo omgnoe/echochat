@@ -7,11 +7,11 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org)
 [![License](https://img.shields.io/badge/License-Source%20Available-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)]()
 
-**Secure. Private. Simple.**
+**Zero-Knowledge • End-to-End Encrypted • Private**
 
-A truly private messaging app with end-to-end encryption where even the server cannot read your messages.
+A truly private messaging app where even the server cannot read your messages, see your nickname, or know who you're talking to.
 
 [<img src="https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android" alt="Download APK">](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases)
 [<img src="https://img.shields.io/badge/Download-TestFlight-blue?style=for-the-badge&logo=apple" alt="TestFlight">](https://github.com/omgnoe/echochat-anonymous-messenger-app/releases)
@@ -33,11 +33,16 @@ A truly private messaging app with end-to-end encryption where even the server c
 
 ## ✨ Features
 
-### 🔒 Privacy First
+### 🔒 Zero-Knowledge Architecture
+- **True Privacy** - Server never sees nicknames, message contents, or friend relationships
 - **End-to-End Encryption** - All messages encrypted using X25519 + AES-256-GCM
-- **Zero-Knowledge Server** - Server only sees encrypted blobs, never plaintext
+- **Anonymized IDs** - User IDs are hashed before reaching the server
 - **No Phone/Email Required** - Just pick a nickname and start chatting
-- **Anonymous Sessions** - Random tokens instead of user tracking
+
+### 🛡️ MITM Protection
+- **Key Verification** - Verify contacts with security fingerprints
+- **QR Code with Key Hash** - QR codes include public key hash for verification
+- **Verified Badges** - Mark friends as verified after out-of-band confirmation
 
 ### ⏱️ Ephemeral by Design
 - **Auto-Expiring Sessions** - Chat sessions expire after 3 days
@@ -56,6 +61,20 @@ A truly private messaging app with end-to-end encryption where even the server c
 
 ---
 
+## 🔐 What the Server CANNOT See
+
+| Data | Protected |
+|------|-----------|
+| Message contents | ✅ Encrypted |
+| Your nickname | ✅ Encrypted exchange |
+| Who you're talking to | ✅ Only sees anonymous tokens |
+| Friend relationships | ✅ Stored locally only |
+| Your real user ID | ✅ SHA-256 hashed |
+
+**The server only sees:** Encrypted blobs, anonymous tokens, and timing metadata.
+
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -68,9 +87,10 @@ EchoChat/
 │   └── ...
 │
 └── echochat-backend/      # Node.js WebSocket server
-    ├── server.ts          # Main server (Zero-Knowledge)
-    ├── session_manager.ts # Session lifecycle
-    └── group_manager.ts   # Group chat support
+    └── src/
+        ├── server.ts          # Main server (Zero-Knowledge)
+        ├── session_manager.ts # Session lifecycle
+        └── group_manager.ts   # Group chat support
 ```
 
 ### Security Model
@@ -81,8 +101,8 @@ EchoChat/
 │             │                    │             │
 │ ┌─────────┐ │    Encrypted       │ ┌─────────┐ │
 │ │PrivKey A│ │◄──────────────────►│ │PrivKey B│ │
-│ └─────────┘ │      Payload       │ └─────────┘ │
-│      │      │         │          │      │      │
+│ └─────────┘ │    Nickname +      │ └─────────┘ │
+│      │      │    Messages        │      │      │
 │      ▼      │         │          │      ▼      │
 │ SharedSecret│         │          │ SharedSecret│
 │ (X25519)    │         │          │ (X25519)    │
@@ -90,11 +110,14 @@ EchoChat/
                         │
                         ▼
               ┌─────────────────┐
-              │  EchoChat Serve │
+              │  EchoChat Server│
+              │   (v1.2.0 ZK)   │
               │                 │
               │  ❌ No plaintext│
-              │  ❌ No user data│
+              │  ❌ No nicknames│
+              │  ❌ No user IDs │
               │  ✅ Only tokens │
+              │  ✅ Only hashes │
               │  ✅ Encrypted   │
               │     payloads    │
               └─────────────────┘
@@ -118,11 +141,14 @@ cd echochat-backend
 # Install dependencies
 npm install
 
+# Compile TypeScript
+npx tsc
+
 # Start the server
-npm start
+node dist/server.js
 
 # Or with custom port
-PORT=8080 npm start
+PORT=8080 node dist/server.js
 ```
 
 The server runs on `ws://localhost:8080` by default.
@@ -171,7 +197,7 @@ EchoChatWebSocketService({
 | Package | Purpose |
 |---------|---------|
 | `ws` | WebSocket server |
-| `crypto` | Passcode hashing |
+| `crypto` | ID anonymization (SHA-256) |
 
 ---
 
@@ -186,6 +212,16 @@ EchoChatWebSocketService({
 - **Algorithm**: AES-256-GCM
 - **Nonce**: 96-bit random per message
 - **MAC**: 128-bit authentication tag
+
+### Passcode Hashing
+- **Algorithm**: FNV-1a with salt
+- **Output**: 128-bit (16 hex characters)
+- Backwards compatible with legacy hash format
+
+### Key Verification
+- **Fingerprint**: 12 characters (XXXX-XXXX-XXXX)
+- **QR Format**: v3 with embedded key hash
+- Out-of-band verification supported
 
 ### Message Format
 ```json
@@ -204,7 +240,7 @@ EchoChatWebSocketService({
 
 | Home | Chat | Friends |
 |:----:|:----:|:-------:|
-| Sessions list | E2E encrypted | QR & codes |
+| Sessions list | E2E encrypted | QR & verification |
 
 </div>
 
@@ -216,6 +252,9 @@ EchoChatWebSocketService({
 - [x] Session management
 - [x] QR code friend adding
 - [x] Ping notifications
+- [x] Zero-Knowledge architecture
+- [x] MITM protection (key verification)
+- [x] Backwards compatibility
 - [ ] Group chats (encrypted)
 - [ ] Desktop support
 - [ ] File/image sharing
